@@ -4,10 +4,10 @@ public class Address {
 
     private final String street;
     private final String city;
-    private final int streetNumber;
+    private final String streetNumber;
     private String district;
 
-    public Address(String street, int streetNumber, String city, String district) {
+    public Address(String street, String streetNumber, String city, String district) {
         this.street = street;
         this.city = city;
         this.streetNumber = streetNumber;
@@ -22,7 +22,7 @@ public class Address {
         return city;
     }
 
-    public int getStreetNumber() {
+    public String getStreetNumber() {
         return streetNumber;
     }
 
@@ -32,11 +32,6 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" +
-                "street='" + street + '\'' +
-                ", city='" + city + '\'' +
-                ", streetNumber=" + streetNumber +
-                ", district='" + district + '\'' +
-                '}';
+        return street +" " + city +" "+ streetNumber +" "+ district;
     }
 }

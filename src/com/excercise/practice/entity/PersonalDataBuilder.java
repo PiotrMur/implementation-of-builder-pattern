@@ -4,14 +4,14 @@ public class PersonalDataBuilder {
 
     private final String firstName;
     private final String lastName;
-    private int age;
+    private String age;
 
     public PersonalDataBuilder(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public PersonalDataBuilder age(int age){
+    public PersonalDataBuilder age(String age){
         this.age = age;
         return this;
     }

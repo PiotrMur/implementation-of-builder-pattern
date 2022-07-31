@@ -4,10 +4,10 @@ public class AddressBuilder {
 
     private final String street;
     private final String city;
-    private final int streetNumber;
+    private final String streetNumber;
     private String district;
 
-    public AddressBuilder(String street, int streetNumber, String city) {
+    public AddressBuilder(String street, String streetNumber, String city) {
         this.street = street;
         this.city = city;
         this.streetNumber = streetNumber;

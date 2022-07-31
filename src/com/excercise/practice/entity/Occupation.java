@@ -16,9 +16,6 @@ public class Occupation {
 
     @Override
     public String toString() {
-        return "Occupation{" +
-                "education='" + education + '\'' +
-                ", company='" + company + '\'' +
-                '}';
+        return education + " " + company;
     }
 }

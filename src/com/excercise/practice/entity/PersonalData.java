@@ -4,9 +4,9 @@ public class PersonalData {
 
     private final String firstName;
     private final String lastName;
-    private int age;
+    private String age;
 
-    public PersonalData(String firstName, String lastName, int age) {
+    public PersonalData(String firstName, String lastName, String age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -21,7 +21,7 @@ public class PersonalData {
         return lastName;
     }
 
-    public int getAge() {
+    public String getAge() {
         return age;
     }
 
