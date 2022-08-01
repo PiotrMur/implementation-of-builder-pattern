@@ -2,9 +2,9 @@ package com.excercise.practice.entity;
 
 public class Address {
 
-    private final String street;
-    private final String city;
-    private final String streetNumber;
+    private String street;
+    private String city;
+    private String streetNumber;
     private String district;
 
     public Address(String street, String streetNumber, String city, String district) {
@@ -28,6 +28,22 @@ public class Address {
 
     public String getDistrict() {
         return district;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setStreetNumber(String streetNumber) {
+        this.streetNumber = streetNumber;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     @Override

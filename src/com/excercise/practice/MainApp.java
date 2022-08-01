@@ -70,17 +70,20 @@ public class MainApp {
                 String firstName = consoleReader.readRequiredProperty("Insert employee's name (required): ");
                 String lastName = consoleReader.readRequiredProperty("Insert employee's last name (required): ");
                 String age =  consoleReader.readOptionalProperty("Insert employee's age (optional): ");
+                PersonalData pData = new PersonalDataBuilder(firstName, lastName).age(age).build();
+
                 String street = consoleReader.readRequiredProperty("Insert employee's street (required): ");
                 String city = consoleReader.readRequiredProperty("Insert employee's city (required): ");
                 String streetNumber =  consoleReader.readOptionalProperty("Insert employee's street number (required): ");
                 String district =  consoleReader.readOptionalProperty("Insert employee's district (optional): ");
+                Address address = new AddressBuilder(street, city, streetNumber).district(district).build();
+
                 String education =  consoleReader.readOptionalProperty("Insert employee's education (required): ");
                 String company =  consoleReader.readOptionalProperty("Insert employee's company (optional): ");
-                PersonalData pData = new PersonalDataBuilder(firstName, lastName).age(age).build();
-                Address address = new AddressBuilder(street, city, streetNumber).district(district).build();
                 Occupation occupation = new OccupationBuilder(education).company(company).build();
+
                 Employee employee = new Employee(pData, address,occupation);
-                dbMap.put(dbMap.size()+1, employee);
+                dbMap.put(employee.getId(), employee);
                 System.out.println("Would you like to add another employee (Y/N)?");
                 iteration = consoleReader.fetchInput();
             }
@@ -116,7 +119,7 @@ public class MainApp {
                 String age = (consoleReader.fetchInput());
 
                 if (!"".equals(firstName)) {
-                    map.replace(empId, map.values().)
+
                     System.out.println("First name updated");
                 }
                 if (!"".equals(lastName)) {

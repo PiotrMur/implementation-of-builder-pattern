@@ -2,8 +2,8 @@ package com.excercise.practice.entity;
 
 public class Interests {
 
-    private final String workRelated;
-    private final String hobbyRelated;
+    private String workRelated;
+    private String hobbyRelated;
     private String unknown;
 
     public Interests(String workRelated, String hobbyRelated, String unknown) {
@@ -22,6 +22,18 @@ public class Interests {
 
     public String getUnknown() {
         return unknown;
+    }
+
+    public void setWorkRelated(String workRelated) {
+        this.workRelated = workRelated;
+    }
+
+    public void setHobbyRelated(String hobbyRelated) {
+        this.hobbyRelated = hobbyRelated;
+    }
+
+    public void setUnknown(String unknown) {
+        this.unknown = unknown;
     }
 
     @Override

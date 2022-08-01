@@ -1,10 +1,14 @@
 package com.excercise.practice.entity;
 
+import java.util.UUID;
+
 public class Employee {
 
     private final PersonalData personalData;
     private final Address address;
     private final Occupation occupation;
+    private final UUID id = UUID.randomUUID();
+
 
     public Employee(PersonalData personalData, Address address, Occupation occupation) {
         this.personalData = personalData;
@@ -22,6 +26,10 @@ public class Employee {
 
     public Occupation getOccupation() {
         return occupation;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     @Override

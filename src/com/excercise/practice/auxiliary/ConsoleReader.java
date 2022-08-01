@@ -8,16 +8,16 @@ public class ConsoleReader {
 
     public String readRequiredProperty(String info) {
         String property = "";
-        while(property.equals("")){
+        while("".equals(property)){
             System.out.println(info);
-            property = (scanner.nextLine()).trim();
+            property = fetchInput();
         }
         return property;
     }
 
     public String readOptionalProperty(String info){
         System.out.println(info);
-        String property = (scanner.nextLine()).trim();
+        String property = fetchInput();
         if(!"".equals(property)) {
             return property;
         } else{
