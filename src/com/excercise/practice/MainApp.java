@@ -3,38 +3,38 @@ package com.excercise.practice;
 import com.excercise.practice.auxiliary.ConsoleReader;
 import com.excercise.practice.entity.*;
 
+import java.io.*;
 import java.util.*;
 
 public class MainApp {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
 
-        Map<Integer, Employee> dbMap = new HashMap<>();
+        Map<UUID, Employee> dbMap = new HashMap<>();
+        saveEmployeesFromTextFile(dbMap);
 
         boolean keepWorking = true;
         while(keepWorking) {
 
-                System.out.println("Insert a number assign to action you would like to perform: \n" +
-                        "1 - Add Employees from text file -> DOES NOT WORK\n" +
-                        "2 - Add Employee \n" +
-                        "3 - Update Employee's data -> DOES NOT WORK\n" +
-                        "4 - Delete Employee\n" +
-                        "5 - Delete ALL Employees\n" +
-                        "6 - Show Employees\n" +
-                        ">6 - Close application\n");
+            System.out.println("Insert a number assign to action you would like to perform: \n" +
+                        "1 - Add Employee \n" +
+                        "2 - Update Employee's data -> DOES NOT WORK\n" +
+                        "3 - Delete Employee\n" +
+                        "4 - Delete ALL Employees\n" +
+                        "5 - Show Employees\n" +
+                        ">5 - Close application\n");
 
 
-                    ConsoleReader consoleReader = new ConsoleReader();
+            ConsoleReader consoleReader = new ConsoleReader();
 
-                    int decision = consoleReader.readDecision();
+            int decision = consoleReader.readDecision();
 
-                    switch (decision) {
-                        //case 1 -> saveEmployeesFromTextFile();
-                        case 2 -> addEmployee(dbMap);
-                        //case 3 -> updateEmployee();
-                        case 4 -> deleteEmployee(dbMap);
-                        case 5 -> deleteAllEmployees(dbMap);
-                        case 6 -> showEmployees(dbMap);
+            switch (decision) {
+                        case 1 -> addEmployee(dbMap);
+                        case 2 -> updateEmployee(dbMap);
+                        case 3 -> deleteEmployee(dbMap);
+                        case 4 -> deleteAllEmployees(dbMap);
+                        case 5 -> showEmployees(dbMap);
                         default -> {
                             System.out.println("Application has been terminated");
                             keepWorking = false;
@@ -74,7 +74,7 @@ public class MainApp {
 
                 String street = consoleReader.readRequiredProperty("Insert employee's street (required): ");
                 String city = consoleReader.readRequiredProperty("Insert employee's city (required): ");
-                String streetNumber =  consoleReader.readOptionalProperty("Insert employee's street number (required): ");
+                String streetNumber =  consoleReader.readOptionalProperty("Insert employee's street number (optional): ");
                 String district =  consoleReader.readOptionalProperty("Insert employee's district (optional): ");
                 Address address = new AddressBuilder(street, city, streetNumber).district(district).build();
 
@@ -104,63 +104,75 @@ public class MainApp {
             }
         }
 
-        /*private static void updateEmployee(Map map) {
+        private static void updateEmployee(Map hashMap) {
             String iteration = "y";
             while("y".equalsIgnoreCase(iteration)) {
-                displayEmployees(map);
-                System.out.println("Update Employee's data\nInsert employee's id: ");
-                int empId = Integer.parseInt(consoleReader.fetchInput());
-                System.out.println("Update information of your choice. If an update is not necessary, leave field empty and press enter");
-                System.out.println("First name:");
-                String firstName = (consoleReader.fetchInput());
-                System.out.println("Last name:");
-                String lastName = (consoleReader.fetchInput());
-                System.out.println("Company:");
-                String age = (consoleReader.fetchInput());
+                displayEmployees(hashMap);
+
+                UUID empId = UUID.fromString(consoleReader.readRequiredProperty("Update Employee's Personal data\nInsert employee's id: "));
+
+                System.out.println("Update information and press enter");
+
+                String firstName = (consoleReader.readRequiredProperty("First name (required):"));
+                String lastName = (consoleReader.readRequiredProperty("Last name (required):"));
+                String age = (consoleReader.readOptionalProperty("Age (optional):"));
 
                 if (!"".equals(firstName)) {
-
                     System.out.println("First name updated");
                 }
                 if (!"".equals(lastName)) {
-                    employee.setLastName(lastName);
                     System.out.println("Last name updated");
                 }
-                if (!"".equals(company)) {
-                    employee.setCompany(company);
-                    System.out.println("Company name updated");
+                if (!"".equals(age)) {
+                    System.out.println("Age updated");
                 }
-                displayEmployees();
+
+                Employee emp = (Employee) hashMap.get(empId);
+                PersonalData personalData = new PersonalData(firstName,lastName,age);
+                emp.setPersonalData(personalData);
+
+                displayEmployees(hashMap);
+
                 System.out.println("Would you like to update another employee (Y/N)?");
                 iteration = consoleReader.fetchInput();
             }
-        }*/
+        }
 
-        /*private static void saveEmployeesToDB(List<Employee> employees) {
-            for(Employee emp : employees){
-                ;
-            }
-        }*/
-        /*private static void saveEmployeesFromTextFile() throws FileNotFoundException {
+        private static void saveEmployeesFromTextFile(Map hashMap) throws FileNotFoundException {
             System.out.println("Insert path to file you would like to use: ");
             String textFilePath = consoleReader.fetchInput();
             File myFile = new File(textFilePath);
             Scanner scan = new Scanner(myFile);
-            List<Employee> employees = new ArrayList<>();
 
             while(scan.hasNextLine()){
                 String line = scan.nextLine();
-                String firstName = (line.split(" "))[0];
-                String lastName = (line.split(" "))[1];
-                String company = (line.split(" "))[2];
-                employees.add(new Employee(firstName, lastName, company));
+
+                String[] employeesData = line.split(",");
+
+
+                String firstName = employeesData[0];
+                String lastName = employeesData[1];
+                String age = employeesData[2];
+                PersonalData personalData = new PersonalData(firstName, lastName, age);
+
+                String street = employeesData[3];
+                String city = employeesData[4];
+                String streetNumber = employeesData[5];
+                String district = employeesData[6];
+                Address address = new Address(street, city, streetNumber, district);
+
+                String education = employeesData[7];
+                String company = employeesData[8];
+                Occupation occupation = new Occupation(education, company);
+
+                Employee employee = (new Employee(personalData, address, occupation));
+                hashMap.put(employee.getId(), employee);
             }
 
-            saveEmployeesToDB(employees);
-        }*/
+        }
 
         private static void displayEmployees(Map map){
-            map.forEach((kij, value) ->System.out.println(kij + ". " + value));
+            map.forEach((key, value) -> System.out.println(key + ". " + value));
         }
 
         private static void showEmployees(Map map){
@@ -171,6 +183,7 @@ public class MainApp {
                 iteration = consoleReader.fetchInput();
             }
         }
+
 }
 
 

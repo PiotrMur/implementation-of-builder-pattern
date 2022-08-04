@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public class Employee {
 
-    private final PersonalData personalData;
-    private final Address address;
-    private final Occupation occupation;
+    private PersonalData personalData;
+    private Address address;
+    private Occupation occupation;
     private final UUID id = UUID.randomUUID();
 
 
@@ -30,6 +30,18 @@ public class Employee {
 
     public UUID getId() {
         return id;
+    }
+
+    public void setPersonalData(PersonalData personalData) {
+        this.personalData = personalData;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public void setOccupation(Occupation occupation) {
+        this.occupation = occupation;
     }
 
     @Override
