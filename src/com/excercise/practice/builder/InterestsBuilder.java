@@ -1,4 +1,6 @@
-package com.excercise.practice.entity;
+package com.excercise.practice.builder;
+
+import com.excercise.practice.entity.Interests;
 
 public class InterestsBuilder {
 

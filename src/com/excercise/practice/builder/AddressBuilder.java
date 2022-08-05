@@ -1,4 +1,6 @@
-package com.excercise.practice.entity;
+package com.excercise.practice.builder;
+
+import com.excercise.practice.entity.Address;
 
 public class AddressBuilder {
 

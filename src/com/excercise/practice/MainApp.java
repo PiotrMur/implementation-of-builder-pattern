@@ -1,7 +1,12 @@
 package com.excercise.practice;
 
 import com.excercise.practice.auxiliary.ConsoleReader;
+import com.excercise.practice.builder.AddressBuilder;
+import com.excercise.practice.builder.OccupationBuilder;
+import com.excercise.practice.builder.PersonalDataBuilder;
 import com.excercise.practice.entity.*;
+import com.excercise.practice.implementation.MyMap;
+import com.excercise.practice.implementation.Repository;
 
 import java.io.*;
 import java.util.*;
@@ -10,15 +15,17 @@ public class MainApp {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        Map<UUID, Employee> dbMap = new HashMap<>();
-        saveEmployeesFromTextFile(dbMap);
+        Repository<UUID, Employee> employees = new MyMap<>();
+
+        //Map<UUID, Employee> dbMap = new HashMap<>();
+        saveEmployeesFromTextFile(employees);
 
         boolean keepWorking = true;
         while(keepWorking) {
 
             System.out.println("Insert a number assign to action you would like to perform: \n" +
                         "1 - Add Employee \n" +
-                        "2 - Update Employee's data -> DOES NOT WORK\n" +
+                        "2 - Update Employee's data\n" +
                         "3 - Delete Employee\n" +
                         "4 - Delete ALL Employees\n" +
                         "5 - Show Employees\n" +
@@ -30,11 +37,11 @@ public class MainApp {
             int decision = consoleReader.readDecision();
 
             switch (decision) {
-                        case 1 -> addEmployee(dbMap);
-                        case 2 -> updateEmployee(dbMap);
-                        case 3 -> deleteEmployee(dbMap);
-                        case 4 -> deleteAllEmployees(dbMap);
-                        case 5 -> showEmployees(dbMap);
+                        case 1 -> addEmployee(employees);
+                        case 2 -> updateEmployee(employees);
+                        case 3 -> deleteEmployee(employees);
+                        case 4 -> deleteAllEmployees(employees);
+                        case 5 -> showEmployees(employees);
                         default -> {
                             System.out.println("Application has been terminated");
                             keepWorking = false;
@@ -48,13 +55,13 @@ public class MainApp {
 
 
 
-        private static ConsoleReader consoleReader = new ConsoleReader();
+        private static final ConsoleReader consoleReader = new ConsoleReader();
 
-        private static void deleteAllEmployees(Map map) {
+        private static void deleteAllEmployees(Repository<UUID, Employee> employees) {
             System.out.println("Are you sure you want to delete ALL Employees? (Y/N)");
             String decision = (consoleReader.fetchInput());
             if("y".equalsIgnoreCase(decision)){
-                map.clear();
+                employees.clear();
                 System.out.println("Deleting was successful");
             } else{
                 System.out.println("Deleting procedure has been aborted");
@@ -62,7 +69,7 @@ public class MainApp {
 
         }
 
-        private static void addEmployee(Map dbMap) {
+        private static void addEmployee(Repository<UUID, Employee> employees) {
             String iteration = "y";
             while("y".equalsIgnoreCase(iteration)) {
                 System.out.println("Add new Employee.");
@@ -83,7 +90,7 @@ public class MainApp {
                 Occupation occupation = new OccupationBuilder(education).company(company).build();
 
                 Employee employee = new Employee(pData, address,occupation);
-                dbMap.put(employee.getId(), employee);
+                employees.save(employee.getId(), employee);
                 System.out.println("Would you like to add another employee (Y/N)?");
                 iteration = consoleReader.fetchInput();
             }
@@ -91,25 +98,29 @@ public class MainApp {
 
 
 
-        private static void deleteEmployee(Map map) {
+        private static void deleteEmployee(Repository<UUID, Employee> employees) {
             String iteration = "y";
             while("y".equalsIgnoreCase(iteration)) {
-                displayEmployees(map);
+                displayEmployees(employees);
                 System.out.println("Delete Employee\nInsert employee's id: ");
-                int empId = Integer.parseInt(consoleReader.fetchInput());
-                map.remove(empId);
-                displayEmployees(map);
+                UUID empId = UUID.fromString(consoleReader.fetchInput());
+                employees.remove(empId);
+                displayEmployees(employees);
                 System.out.println("Would you like to delete another employee (Y/N)?");
                 iteration = consoleReader.fetchInput();
             }
         }
 
-        private static void updateEmployee(Map hashMap) {
+        private static void updateEmployee(Repository<UUID, Employee> employees) {
             String iteration = "y";
             while("y".equalsIgnoreCase(iteration)) {
-                displayEmployees(hashMap);
+                displayEmployees(employees);
 
                 UUID empId = UUID.fromString(consoleReader.readRequiredProperty("Update Employee's Personal data\nInsert employee's id: "));
+                if(!employees.isKey(empId)){
+                    System.out.println("Key " + empId + " does not exists!");
+                    break;
+                }
 
                 System.out.println("Update information and press enter");
 
@@ -127,20 +138,20 @@ public class MainApp {
                     System.out.println("Age updated");
                 }
 
-                Employee emp = (Employee) hashMap.get(empId);
+                Employee employee = employees.getValue(empId);
                 PersonalData personalData = new PersonalData(firstName,lastName,age);
-                emp.setPersonalData(personalData);
+                employee.setPersonalData(personalData);
 
-                displayEmployees(hashMap);
+                displayEmployees(employees);
 
                 System.out.println("Would you like to update another employee (Y/N)?");
                 iteration = consoleReader.fetchInput();
             }
         }
 
-        private static void saveEmployeesFromTextFile(Map hashMap) throws FileNotFoundException {
+        private static void saveEmployeesFromTextFile(Repository<UUID, Employee> employees) throws FileNotFoundException {
             System.out.println("Insert path to file you would like to use: ");
-            String textFilePath = consoleReader.fetchInput();
+            String textFilePath = "C:\\Users\\piotr.murawski\\OneDrive - intive\\Desktop\\Employees.txt";
             File myFile = new File(textFilePath);
             Scanner scan = new Scanner(myFile);
 
@@ -166,19 +177,19 @@ public class MainApp {
                 Occupation occupation = new Occupation(education, company);
 
                 Employee employee = (new Employee(personalData, address, occupation));
-                hashMap.put(employee.getId(), employee);
+                employees.save(employee.getId(), employee);
             }
 
         }
 
-        private static void displayEmployees(Map map){
-            map.forEach((key, value) -> System.out.println(key + ". " + value));
+        private static void displayEmployees(Repository<UUID, Employee> employees){
+            employees.forEach((key, value) -> System.out.println(key + ". " + value));
         }
 
-        private static void showEmployees(Map map){
+        private static void showEmployees(Repository<UUID, Employee> employees){
             String iteration = "n";
             while("n".equalsIgnoreCase(iteration)) {
-                map.forEach((key, value) ->System.out.println(key + ". " + value));
+                employees.forEach((key, value) ->System.out.println(key + ". " + value));
                 System.out.println("Would you like to go back to main menu (Y/N)?");
                 iteration = consoleReader.fetchInput();
             }

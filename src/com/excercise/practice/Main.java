@@ -1,7 +1,6 @@
 package com.excercise.practice;
 
 import com.excercise.practice.entity.Occupation;
-import com.excercise.practice.entity.OccupationBuilder;
 import com.excercise.practice.entity.PersonalData;
 
 public class Main {
