@@ -1,21 +1,29 @@
 package com.excercise.practice.implementation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class MyMap<I,V> implements Repository<I,V>{
 
+
     Map<I,V> data = new HashMap<>();
 
     @Override
-    public V getValue(I id) {
+    public V findBy(I id) {
         return data.get(id);
     }
 
     @Override
-    public void forEach(BiConsumer<? super I, ? super V> action) {
+    public void executeOnEach(BiConsumer<? super I, ? super V> action) {
         data.forEach(action);
+    }
+
+    @Override
+    public List<V> findAll() {
+        return new ArrayList<>(data.values());
     }
 
     @Override
@@ -24,17 +32,13 @@ public class MyMap<I,V> implements Repository<I,V>{
     }
 
     @Override
-    public boolean isKey(I id) {
+    public boolean exists(I id) {
         return data.containsKey(id);
     }
 
-    @Override
-    public boolean isValue(V value) {
-        return data.containsValue(value);
-    }
 
     @Override
-    public void clear() {
+    public void removeAll() {
         data.clear();
     }
 

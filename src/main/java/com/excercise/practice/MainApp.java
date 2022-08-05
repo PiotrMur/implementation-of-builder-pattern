@@ -17,7 +17,6 @@ public class MainApp {
 
         Repository<UUID, Employee> employees = new MyMap<>();
 
-        //Map<UUID, Employee> dbMap = new HashMap<>();
         saveEmployeesFromTextFile(employees);
 
         boolean keepWorking = true;
@@ -61,7 +60,7 @@ public class MainApp {
             System.out.println("Are you sure you want to delete ALL Employees? (Y/N)");
             String decision = (consoleReader.fetchInput());
             if("y".equalsIgnoreCase(decision)){
-                employees.clear();
+                employees.removeAll();
                 System.out.println("Deleting was successful");
             } else{
                 System.out.println("Deleting procedure has been aborted");
@@ -117,7 +116,7 @@ public class MainApp {
                 displayEmployees(employees);
 
                 UUID empId = UUID.fromString(consoleReader.readRequiredProperty("Update Employee's Personal data\nInsert employee's id: "));
-                if(!employees.isKey(empId)){
+                if(!employees.exists(empId)){
                     System.out.println("Key " + empId + " does not exists!");
                     break;
                 }
@@ -138,7 +137,7 @@ public class MainApp {
                     System.out.println("Age updated");
                 }
 
-                Employee employee = employees.getValue(empId);
+                Employee employee = employees.findBy(empId);
                 PersonalData personalData = new PersonalData(firstName,lastName,age);
                 employee.setPersonalData(personalData);
 
@@ -182,14 +181,15 @@ public class MainApp {
 
         }
 
-        private static void displayEmployees(Repository<UUID, Employee> employees){
-            employees.forEach((key, value) -> System.out.println(key + ". " + value));
+        private static void displayEmployees(Repository<UUID, Employee> employeeRepository){
+            //zrób tu pobranie z listy i wypisz
+            employeeRepository.executeOnEach((key, value) -> System.out.println(key + ". " + value));
         }
 
         private static void showEmployees(Repository<UUID, Employee> employees){
             String iteration = "n";
             while("n".equalsIgnoreCase(iteration)) {
-                employees.forEach((key, value) ->System.out.println(key + ". " + value));
+                employees.executeOnEach((key, value) ->System.out.println(key + ". " + value));
                 System.out.println("Would you like to go back to main menu (Y/N)?");
                 iteration = consoleReader.fetchInput();
             }
