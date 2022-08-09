@@ -3,14 +3,15 @@ package com.excercise.practice.implementation;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-public class MyMap<I,V> implements Repository<I,V>{
+import static java.util.Optional.ofNullable;
 
+public class MyMap<I, V> implements Repository<I, V> {
 
-    Map<I,V> data = new HashMap<>();
+    private final Map<I, V> data = new HashMap<>();
 
     @Override
-    public V findBy(I id) {
-        return data.get(id);
+    public Optional<V> findBy(I id) {
+        return ofNullable(data.get(id));
     }
 
     @Override
@@ -25,7 +26,7 @@ public class MyMap<I,V> implements Repository<I,V>{
 
     @Override
     public void save(I id, V value) {
-        data.put(id,value);
+        data.put(id, value);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class MyMap<I,V> implements Repository<I,V>{
     }
 
     @Override
-    public void remove(I id) {
-        data.remove(id);
+    public long remove(I id) {
+        return data.remove(id) == null ? 0 : 1;
     }
 }

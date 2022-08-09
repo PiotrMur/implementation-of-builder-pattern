@@ -39,10 +39,10 @@ class MyMapTest {
         repository.save(2, "Tomasz");
 
         //when
-        String empName = repository.findBy(1);
+        Optional<String> empName = repository.findBy(1);
 
         //then
-        assertThat(empName).isEqualTo("Piotr");
+        assertThat(empName).hasValue("Piotr");
 
         //when
         List<String> names = repository.findAll();
@@ -59,10 +59,10 @@ class MyMapTest {
         repository.save(2, "Adam");
 
         //when
-        String employeeValue = repository.findBy(1);
+        Optional<String> employeeValue = repository.findBy(1);
 
         //then
-        assertThat(employeeValue).isNull();
+        assertThat(employeeValue).isEmpty();
 
     }
 
@@ -74,16 +74,18 @@ class MyMapTest {
         repository.save(2, "Tomasz");
 
         //when
-        String exisitingName = repository.findBy(1);
-        assertThat(exisitingName).isEqualTo("Piotr");
+        Optional<String> exisitingName = repository.findBy(1);
+        assertThat(exisitingName).hasValue("Piotr");
 
 
         //when
-        repository.remove(1);
+        long count = repository.remove(1);
 
         //then
-        String notExisitingName = repository.findBy(1);
-        assertThat(notExisitingName).isNull();
+        assertThat(count).isOne();
+        
+        Optional<String> notExisitingName = repository.findBy(1);
+        assertThat(notExisitingName).isEmpty();
 
         List<String> names = repository.findAll();
         assertThat(names).containsExactlyInAnyOrder("Tomasz");
@@ -97,9 +99,10 @@ class MyMapTest {
         repository.save(1, "Piotr");
 
         //when
-        repository.remove(3);
-
+        long count = repository.remove(3);
+        
         //then
+        assertThat(count).isZero();
 
     }
 
