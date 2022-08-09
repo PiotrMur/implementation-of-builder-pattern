@@ -1,11 +1,12 @@
 package com.excercise.practice.implementation;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public interface Repository<I,V> {
 
-    V findBy(I id);
+    Optional<V> findBy(I id);
 
     void executeOnEach(BiConsumer<? super I, ? super V> action);
 
@@ -17,7 +18,7 @@ public interface Repository<I,V> {
 
     void removeAll();
 
-    void remove(I id);
+    long remove(I id);
 
 
 }
